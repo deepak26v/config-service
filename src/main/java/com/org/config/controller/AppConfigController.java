@@ -1,12 +1,14 @@
 package com.org.config.controller;
 
-import com.org.config.dao.AppConfigDAO;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.org.config.exception.AppConfigNotFoundException;
 import com.org.config.model.AppConfig;
 import com.org.config.model.AppConfigKey;
 import com.org.config.service.AppConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,14 +33,20 @@ public class AppConfigController {
     @RequestMapping(method = RequestMethod.GET, value = BASE_PATH + APPCODE + CONFIG + VERSION)
     @ResponseBody
     public ResponseEntity<?> getAppConfig(@PathVariable String appcode, @PathVariable String version) {
-        System.out.println("getAppConfig : " + appcode + ", " + version);
-        return ResponseEntity.ok().body("Success");
-
         try{
-            AppConfigKey appConfigKey = new AppConfigKey(appcode, version);
-            appConfigService.find(appConfigKey);
+            AppConfig appConfig = appConfigService.getAppConfig(new AppConfigKey(appcode, version));
+            if(appConfig == null) {
+                throw new AppConfigNotFoundException("JSON config not found");
+            } else {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentLength(appConfig.getAppConfigJson().length())
+                        .body(appConfig.getAppConfigJson());
+            }
         } catch(AppConfigNotFoundException e) {
-
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("JSON Config for appcode = " + appcode + ", version = " + version +
+                            " could not be retrieved" + " => " + e.getMessage());
         }
     }
 
@@ -53,16 +61,18 @@ public class AppConfigController {
     @ResponseBody
     public ResponseEntity<?> createOrUpdateAppConfig(@PathVariable String appcode,
                                                      @PathVariable String version,
-                                                     @RequestBody Map<String, String> appConfigJson,
+                                                     @RequestBody Map<String, Object> appConfigJson,
                                                      HttpServletRequest httpServletRequest) {
         try {
-            AppConfig appConfig = new AppConfig(appConfigJson);
+            AppConfig appConfig = new AppConfig(new AppConfigKey(appcode, version),
+                                                new ObjectMapper().writeValueAsString(appConfigJson));
             appConfigService.save(appConfig);
             URI locationURI = new URI(httpServletRequest.getRequestURL().toString() + "/");
+            HttpHeaders headers = new HttpHeaders();
             return ResponseEntity.created(locationURI)
                                 .body("Successfully created new JSON Config document");
         } catch(Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create new JSON document " + " => " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create new JSON Config " + " => " + e.getMessage());
         }
     }
 }

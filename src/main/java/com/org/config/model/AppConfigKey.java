@@ -1,24 +1,28 @@
 package com.org.config.model;
 
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Id;
 import java.io.Serializable;
 
-public class AppConfigKey implements Serializable{
+public class AppConfigKey implements Serializable {
 
-    private Float version;
+    private String version;
 
     private String appCode;
+
+    public AppConfigKey() {}
 
     public AppConfigKey(String appcode, String version) {
         this.appCode = appcode;
         this.version = version;
     }
 
-    public Integer getVersion() {
+    public String getVersion() {
         return version;
     }
 
-    public void setVersion(Integer version) {
+    public void setVersion(String version) {
         this.version = version;
     }
 

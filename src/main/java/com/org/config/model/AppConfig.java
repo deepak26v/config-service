@@ -1,30 +1,30 @@
 package com.org.config.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
 
 @Entity
-@IdClass(AppConfigKey.class)
-public class AppConfig implements Serializable {
+public class AppConfig {
 
-    private Map<String, String> appConfigJson;
+    @Id
+    private AppConfigKey appConfigKey;
 
-    public AppConfig(Map<String, String> appConfigJson) {
-        this.appConfigJson = appConfigJson
+    private String appConfigJson;
+
+    public AppConfig(){}
+
+    public AppConfig(AppConfigKey appConfigKey, String appConfigJson) {
+        this.appConfigKey = appConfigKey;
+        this.appConfigJson = appConfigJson;
     };
 
-    public AppConfig(String appcode, String version) {
-
-    }
-
-    public Map<String, String> getAppConfigJson() {
+    public String getAppConfigJson() {
         return appConfigJson;
     }
 
-    public void setAppConfigJson(Map<String, String> appConfigJson) {
+    public void setAppConfigJson(String appConfigJson) {
         this.appConfigJson = appConfigJson;
     }
 }
