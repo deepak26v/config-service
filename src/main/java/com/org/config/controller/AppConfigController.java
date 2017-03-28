@@ -30,11 +30,11 @@ public class AppConfigController {
 
     public static final String APPCODE = "/{appcode}";
 
-    public static final String VERSION = "/{version}";
+    public static final String VERSION = "/{version:.+}";
 
-    public static final String GET_APP_CONFIG_LINK = "GetAppConfig-Link";
+    public static final String GET_APP_CONFIG_LINK = "GET-AppConfig";
 
-    public static final String GET_APP_CONFIGS_LINK = "GetAppConfigs-Link";
+    public static final String GET_APP_CONFIGS_LINK = "GET-AppConfigs";
 
     public static final String SUCCESS_MESSAGE = "Successfully created new JSON Config document";
 
@@ -71,17 +71,15 @@ public class AppConfigController {
 
     private HttpHeaders buildHeaders(String appcode, String version) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        URI uriOfGetConfigResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                                                    .path("/{appcode}/config/{version}")
-                                                    .buildAndExpand(appcode, version)
-                                                    .toUri();
+        System.out.println();
+        String uriOfGetConfigResource = ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString();
 
         URI uriOfGetAllConfigResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/{appcode}/config")
-                .buildAndExpand(appcode)
-                .toUri();
+                                                                    .path("/api/{appcode}/config")
+                                                                    .buildAndExpand(appcode)
+                                                                    .toUri();
 
-        httpHeaders.set(GET_APP_CONFIG_LINK, uriOfGetConfigResource.toString());
+        httpHeaders.set(GET_APP_CONFIG_LINK, uriOfGetConfigResource);
         httpHeaders.set(GET_APP_CONFIGS_LINK, uriOfGetAllConfigResource.toString());
 
         return httpHeaders;
