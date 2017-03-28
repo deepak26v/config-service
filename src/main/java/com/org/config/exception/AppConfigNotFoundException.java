@@ -16,4 +16,20 @@ public class AppConfigNotFoundException extends RuntimeException {
         super("JSON Config not found for appcode : " + appcode);
         this.appcode = appcode;
     }
+
+    public String getAppcode() {
+        return appcode;
+    }
+
+    public void setAppcode(String appcode) {
+        this.appcode = appcode;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
 }
