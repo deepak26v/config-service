@@ -17,15 +17,32 @@ public class AppConfigServiceImpl implements AppConfigService {
 
     public AppConfigServiceImpl() {}
 
+    /**
+     * Persist an application's config
+     *
+     * @param appConfig
+     */
     public void saveAppConfig(AppConfig appConfig) {
         appConfigRepository.save(appConfig);
     }
 
+    /**
+     * Retrieve an application's config based on appcode and version
+     *
+     * @param appConfigKey
+     * @return
+     */
     public AppConfig getAppConfig(AppConfigKey appConfigKey) {
         return appConfigRepository.findOne(appConfigKey);
     }
 
-    public List<AppConfig> getAllAppConfig(String appCode) {
+    /**
+     * Retrieve all config of a specific app, ordered by last modified date in descending order
+     *
+     * @param appCode
+     * @return
+     */
+    public List<AppConfig> getAppConfigs(String appCode) {
         return appConfigRepository.findByAppcodeOrderByLastModifiedTsDesc(appCode);
     }
 }

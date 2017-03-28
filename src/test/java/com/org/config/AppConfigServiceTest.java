@@ -8,10 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -35,10 +32,11 @@ public class AppConfigServiceTest {
 
     @Before
     public void setup() {
-        //Persist the App Config
+        //Persist App Config
         appConfigService.saveAppConfig(
                 new AppConfig("test-app", "v1", "{\"key1\" : \"value1\"}"));
 
+        //Persist App Config
         appConfigService.saveAppConfig(
                 new AppConfig("test-app", "v2", "{\"key2\" : \"value2\"}"));
     }
@@ -54,7 +52,7 @@ public class AppConfigServiceTest {
 
     @Test
     public void fetchAllAppConfig() {
-        List<AppConfig> appConfigList = appConfigService.getAllAppConfig("test-app");
+        List<AppConfig> appConfigList = appConfigService.getAppConfigs("test-app");
 
         assertNotNull(appConfigList);
         assertEquals(2, appConfigList.size());
@@ -65,7 +63,6 @@ public class AppConfigServiceTest {
     @Test
     public void getAppConfigForMissingAppOrVersion() {
         AppConfig appConfig = appConfigService.getAppConfig(new AppConfigKey("test-app", "v10"));
-
         assertNull(appConfig);
     }
 }

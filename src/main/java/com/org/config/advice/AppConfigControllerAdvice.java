@@ -8,8 +8,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
+
+/**
+ * Class to automatically handle exception thrown from application REST Controllers
+ */
 
 @ControllerAdvice(annotations = RestController.class)
 @ResponseBody
