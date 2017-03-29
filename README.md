@@ -1,6 +1,6 @@
 # config-service
 
-  For the sake of simplicity, the current implementation uses Spring Boot's default Database - H2. This allows for rapid development of   REST apis without worrying about a database schema. It is in memory database hence REST call data will be available only in the      current execution session.
+  For the sake of simplicity, the current implementation uses Spring Boot's default Database - H2. This allows for rapid development of   REST apis without worrying about a database schema. It is a in-memory database hence REST call data will be available only in the      current execution session.
 
 <b>Save App Config</b>
 - - - -
